@@ -27,6 +27,4 @@ project.xcworkspace
 node_modules/
 npm-debug.log
 
-# Submodules
-#
 SDWebImage/
