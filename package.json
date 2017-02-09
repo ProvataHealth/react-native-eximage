@@ -1,5 +1,5 @@
 {
-  "name": "react-native-eximage",
+  "name": "@provata/react-native-eximage",
   "version": "0.1.6",
   "description": "A Third Party Image Module.",
   "main": "ExImage.ios.js",
