@@ -1,23 +1,23 @@
 'use strict';
 
-var EdgeInsetsPropType = require('EdgeInsetsPropType');
-var ImageResizeMode = require('ImageResizeMode');
-var ImageStylePropTypes = require('ImageStylePropTypes');
-var NativeMethodsMixin = require('NativeMethodsMixin');
-var NativeModules = require('NativeModules');
-var PropTypes = require('ReactPropTypes');
-var React = require('React');
-var ReactNativeViewAttributes = require('ReactNativeViewAttributes');
-var StyleSheet = require('StyleSheet');
-var StyleSheetPropType = require('StyleSheetPropType');
+import EdgeInsetsPropType from 'react-native/Libraries/StyleSheet/EdgeInsetsPropType';
+import ImageResizeMode from 'react-native/Libraries/Image/ImageResizeMode';
+import ImageStylePropTypes from 'react-native/Libraries/Image/ImageStylePropTypes';
+import StyleSheetPropType from 'react-native/Libraries/StyleSheet/StyleSheetPropType';
+import flattenStyle from 'react-native/Libraries/StyleSheet/flattenStyle';
+import ReactNativeViewAttributes from 'react-native/Libraries/Components/View/ReactNativeViewAttributes';
+import verifyPropTypes from 'react-native/Libraries/ReactNative/verifyPropTypes';
+import resolveAssetSource from 'react-native/Libraries/Image/resolveAssetSource';
+import NativeMethodsMixin from 'react-native/Libraries/Renderer/src/renderers/native/NativeMethodsMixin';
 
-var flattenStyle = require('flattenStyle');
-var invariant = require('invariant');
-var merge = require('merge');
-var requireNativeComponent = require('requireNativeComponent');
-var resolveAssetSource = require('resolveAssetSource');
-var verifyPropTypes = require('verifyPropTypes');
-var warning = require('warning');
+import {
+    warning,
+    requireNativeComponent,
+    StyleSheet,
+    NativeModules } from 'react-native';
+import React, { PropTypes } from 'react';
+import invariant from 'invariant';
+import merge from 'merge';
 
 var ExImage = React.createClass({
   propTypes: {
@@ -159,7 +159,7 @@ var ExImage = React.createClass({
     }
     var resizeMode = this.props.resizeMode || style.resizeMode || 'cover';
 
-    var nativeProps = merge(this.props, {
+    var nativeProps = merge({}, this.props, {
       style,
       tintColor: style.tintColor,
       resizeMode: resizeMode,
@@ -187,11 +187,13 @@ var ExImage = React.createClass({
     nativeProps.onExLoadProgress = nativeProps.onLoadProgress;
     nativeProps.onExLoadError = nativeProps.onLoadError;
     nativeProps.onExLoaded = nativeProps.onLoaded;
+    nativeProps.onExLoadEnd = nativeProps.onLoadEnd;
+
     delete nativeProps.onLoadStart;
     delete nativeProps.onLoadProgress;
     delete nativeProps.onLoadError;
     delete nativeProps.onLoaded;
-    return <RawImage {...nativeProps} />;
+    return <RawImage {...nativeProps}/>;
   }
 });
 
@@ -211,6 +213,10 @@ var nativeOnlyProps = {
   imageTag: true,
   contentMode: true,
   imageInfo: true,
+  onExLoadStart: true,
+  onExLoadEnd: true,
+  onExLoadError: true,
+  onExLoadProgress: true
 };
 if (__DEV__) {
   verifyPropTypes(ExImage, RCTExStaticImage.viewConfig, nativeOnlyProps);

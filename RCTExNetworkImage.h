@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 #import "RCTBridge.h"
+#import "RCTComponent.h"
 
 @interface RCTExNetworkImage : UIView
 
@@ -28,6 +29,11 @@
 @property (nonatomic) UIColor *loadingForegroundColor;
 
 @property (nonatomic) BOOL progressIndicate;
+
+@property (nonatomic, copy) RCTBubblingEventBlock onExLoadStart;
+@property (nonatomic, copy) RCTBubblingEventBlock onExLoadEnd;
+@property (nonatomic, copy) RCTBubblingEventBlock onExLoadError;
+@property (nonatomic, copy) RCTBubblingEventBlock onExLoadProgress;
 
 - (instancetype)initWithBridge:(RCTBridge *)bridge;
 

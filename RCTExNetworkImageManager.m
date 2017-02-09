@@ -31,6 +31,11 @@ RCT_EXPORT_VIEW_PROPERTY(loadingBackgroundColor, UIColor)
 RCT_EXPORT_VIEW_PROPERTY(loadingForegroundColor, UIColor)
 RCT_EXPORT_VIEW_PROPERTY(progressIndicate, BOOL)
 
+RCT_EXPORT_VIEW_PROPERTY(onExLoadEnd, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onExLoadError, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onExLoadProgress, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onExLoadStart, RCTBubblingEventBlock)
+
 RCT_EXPORT_METHOD(calculateCacheSize:(RCTResponseSenderBlock)callback) {
     SDImageCache *cache = [SDImageCache sharedImageCache];
     NSInteger size = [cache getSize];
@@ -44,7 +49,7 @@ RCT_EXPORT_METHOD(clearCache:(RCTResponseSenderBlock)callback) {
 }
 
 - (NSArray *)customDirectEventTypes {
-    return @[@"exLoadStart", @"exLoadProgress", @"exLoadError", @"exLoaded"];
+    return @[@"onExLoadStart", @"onExLoadProgress", @"onExLoadError", @"onExLoaded"];
 }
 
 @end

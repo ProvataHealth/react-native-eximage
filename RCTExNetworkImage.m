@@ -41,6 +41,10 @@
 
 @synthesize imageURL = _imageURL;
 @synthesize progressIndicate = _progressIndicate;
+@synthesize onExLoadStart = _onExLoadStart;
+@synthesize onExLoadEnd = _onExLoadEnd;
+@synthesize onExLoadError = _onExLoadError;
+@synthesize onExLoadProgress = _onExLoadProgress;
 
 - (instancetype)initWithBridge:(RCTBridge *)bridge {
     self = [super initWithFrame:CGRectZero];
@@ -112,12 +116,10 @@
 }
 
 - (void)setImageURL:(NSURL *)imageURL {
-    _canRetry = NO;
     if (![imageURL isEqual:_imageURL] && _downloadToken) {
         [_downloadToken cancel];
         _downloadToken = nil;
     }
-    
     if (_deferred) {
         _deferredImageURL = imageURL;
     } else {
@@ -129,14 +131,20 @@
         }
         
         _imageURL = imageURL;
-        
-        if (!_defaultImage) {
-            _imageView.image = nil;
-        }
+    }
+}
+
+- (void)didSetProps:(NSArray<NSString *> *)changedProps {
+    _canRetry = NO;
+    if (_deferred) {
+        return;
+    } else {
         [_progressIndicator setProgress:0.0];
         [self addSubview:_progressIndicator];
         
-        [_bridge.eventDispatcher sendInputEventWithName:@"exLoadStart" body:@{@"target": self.reactTag}];
+        if (self.onExLoadStart) {
+            self.onExLoadStart(@{@"target": self.reactTag});
+        }
         
         SDWebImageManager *manager = [SDWebImageManager sharedManager];
         _downloaded = NO;
@@ -151,7 +159,9 @@
                                                          @"written": @(receivedSize),
                                                          @"total": @(expectedSize)
                                                          };
-                                 [_bridge.eventDispatcher sendInputEventWithName:@"exLoadProgress" body:event];
+                                 if (self.onExLoadProgress) {
+                                     self.onExLoadProgress(event);
+                                 }
                              }
                             completed:^(UIImage *image, NSError *error, SDImageCacheType cacheType, BOOL finished, NSURL *imageURL) {
                                 _downloaded = YES;
@@ -159,7 +169,10 @@
                                     _imageView.image = image;
                                     [_progressIndicator removeFromSuperview];
                                     
-                                    [_bridge.eventDispatcher sendInputEventWithName:@"exLoaded" body:@{@"target": self.reactTag}];
+                                    if (self.onExLoadEnd) {
+                                        self.onExLoadEnd(@{@"target": self.reactTag});
+                                    }
+                                    
                                 } else {
                                     _canRetry = YES;
                                     [_progressIndicator removeFromSuperview];
@@ -170,10 +183,28 @@
                                                             @"target": self.reactTag,
                                                             @"error": error.description
                                                             };
-                                    [_bridge.eventDispatcher sendInputEventWithName:@"exLoadError" body:event];
+                                    if (self.onExLoadError) {
+                                        self.onExLoadError(event);
+                                    }
                                 }
                             }];
     }
+}
+
+- (void)setOnExLoadStart:(RCTBubblingEventBlock)onExLoadStart {
+    _onExLoadStart = onExLoadStart;
+}
+
+- (void)setOnExLoadEnd:(RCTBubblingEventBlock)onExLoadEnd {
+    _onExLoadEnd = onExLoadEnd;
+}
+
+- (void)setOnExLoadError:(RCTBubblingEventBlock)onExLoadError {
+    _onExLoadError = onExLoadError;
+}
+
+- (void)setOnExLoadProgress:(RCTBubblingEventBlock)onExLoadProgress {
+    _onExLoadProgress = onExLoadProgress;
 }
 
 - (void)retry {
