@@ -1,6 +1,6 @@
 {
   "name": "@provata/react-native-eximage",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "A Third Party Image Module.",
   "main": "ExImage.ios.js",
   "author": "Guo Dong <guodong000@gmail.com>",
