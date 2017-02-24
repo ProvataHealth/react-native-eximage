@@ -16,13 +16,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:guodong000/react-native-eximage.git"
+    "url": "git@github.com:ProvataHealth/react-native-eximage.git"
   },
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/guodong000/react-native-eximage/issues"
-  },
-  "scripts": {
-    "postinstall": "git clone --recursive --branch '3.7.3' --single-branch --depth 1 https://github.com/rs/SDWebImage.git"
-  }
+  "license": "MIT"
 }
