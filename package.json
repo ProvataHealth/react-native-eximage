@@ -1,6 +1,6 @@
 {
   "name": "@provata/react-native-eximage",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "description": "A Third Party Image Module.",
   "main": "ExImage.ios.js",
   "author": "Guo Dong <guodong000@gmail.com>",
@@ -23,6 +23,6 @@
     "url": "https://github.com/guodong000/react-native-eximage/issues"
   },
   "scripts": {
-    "postinstall": "git clone --recursive --branch '3.7.3' --single-branch --depth 1 https://github.com/rs/SDWebImage.git"
+    "postinstall": "if [ ! -d './SDWebImage' ]; then git clone --recursive --branch '3.7.3' --single-branch --depth 1 https://github.com/rs/SDWebImage.git; fi"
   }
 }
